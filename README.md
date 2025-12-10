@@ -2,22 +2,22 @@
 
 A visual workflow designer built with React and React Flow that allows HR admins to create, configure, and test internal workflows such as onboarding, leave approval, and document verification.
 
-## 🚀 Features
+## Features
 
 - **Visual Workflow Canvas**: Drag-and-drop interface powered by React Flow
 - **5 Custom Node Types**:
-  - 🚀 Start Node - Workflow entry point
-  - 📝 Task Node - Human tasks (e.g., collect documents)
-  - ✅ Approval Node - Manager or HR approval steps
-  - ⚡ Automated Node - System-triggered actions (e.g., send email, generate PDF)
-  - 🏁 End Node - Workflow completion
+  - Start Node - Workflow entry point
+  - Task Node - Human tasks (e.g., collect documents)
+  - Approval Node - Manager or HR approval steps
+  - Automated Node - System-triggered actions (e.g., send email, generate PDF)
+  - End Node - Workflow completion
 - **Dynamic Configuration Forms**: Edit each node with type-specific forms
 - **Mock API Integration**: Simulates automated actions and workflow execution
 - **Workflow Simulation**: Test and validate workflows with step-by-step execution
 - **Export/Import**: Download workflows as JSON
 - **Visual Validation**: Real-time validation with error messages
 
-## 🏗️ Architecture
+## Architecture
 
 ### Folder Structure
 
@@ -49,7 +49,7 @@ hr-workflow/
 4. **WorkflowSimulator.js** - Testing panel with validation and execution simulation
 5. **mockApi.js** - Mock API layer with validation and cycle detection
 
-## 🎯 Usage
+## Usage
 
 ### Creating a Workflow
 
@@ -60,9 +60,9 @@ hr-workflow/
 
 ### Testing Workflows
 
-1. Click the **"🧪 Test Workflow"** button in the header
+1. Click the **"Test Workflow"** button in the header
 2. Review workflow summary
-3. Click **"▶️ Run Simulation"**
+3. Click **"Run Simulation"**
 4. View execution steps and validation results
 
 ## Available Scripts
@@ -108,7 +108,7 @@ Builds the app for production to the `build` folder.
 - Proper validation and error handling
 - Extensible structure for adding more endpoints
 
-## ✅ Validation Features
+## Validation Features
 
 The simulator validates:
 - ✓ Presence of Start Node
@@ -116,7 +116,7 @@ The simulator validates:
 - ✓ Disconnected nodes detection
 - ✓ Cycle detection (prevents infinite loops)
 
-## 🚧 Future Enhancements
+## Future Enhancements
 
 With more time, these features could be added:
 
@@ -128,7 +128,7 @@ With more time, these features could be added:
 6. **Advanced Validation**: More complex business rules
 7. **Auto-layout**: Automatic node positioning
 
-## 📝 Assumptions
+## Assumptions
 
 1. **No Backend**: All data is client-side only
 2. **Single User**: No concurrent editing considerations
