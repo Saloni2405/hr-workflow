@@ -1,0 +1,265 @@
+/* Simulator Controls */
+.simulator-controls {
+  display: flex;
+  gap: 10px;
+}
+
+.simulate-btn,
+.export-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.simulate-btn {
+  background: #4CAF50;
+  color: white;
+}
+
+.simulate-btn:hover:not(:disabled) {
+  background: #45a049;
+}
+
+.export-btn {
+  background: #2196F3;
+  color: white;
+}
+
+.export-btn:hover:not(:disabled) {
+  background: #1976D2;
+}
+
+.simulate-btn:disabled,
+.export-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* Modal */
+.simulator-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.simulator-content {
+  background: white;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 700px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.simulator-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.simulator-header h2 {
+  margin: 0;
+  font-size: 24px;
+  color: #333;
+}
+
+.close-modal-btn {
+  background: none;
+  border: none;
+  font-size: 32px;
+  cursor: pointer;
+  color: #999;
+  padding: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-modal-btn:hover {
+  color: #333;
+}
+
+.simulator-body {
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.workflow-summary {
+  background: #f9f9f9;
+  color: black;
+  padding: 15px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.workflow-summary h3 {
+  margin: 0 0 10px 0;
+  font-size: 16px;
+}
+
+.workflow-summary p {
+  margin: 5px 0;
+  font-size: 14px;
+}
+
+.simulation-start {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.run-simulation-btn {
+  background: #4CAF50;
+  color: black;
+  border: none;
+  border-radius: 4px;
+  padding: 12px 32px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  margin-top: 20px;
+}
+
+.run-simulation-btn:hover:not(:disabled) {
+  background: #45a049;
+  color: white;
+}
+
+.run-simulation-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* Errors */
+.simulation-errors {
+  background: #ffebee;
+  padding: 20px;
+  border-radius: 4px;
+  border-left: 4px solid #f44336;
+}
+
+.simulation-errors h3 {
+  margin: 0 0 15px 0;
+  color: #d32f2f;
+}
+
+.simulation-errors ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.simulation-errors li {
+  margin: 8px 0;
+  color: #c62828;
+}
+
+/* Results */
+.simulation-results {
+  background: #e8f5e9;
+  padding: 20px;
+  border-radius: 4px;
+  border-left: 4px solid #4CAF50;
+}
+
+.simulation-results h3 {
+  margin: 0 0 10px 0;
+  color: #2e7d32;
+}
+
+.success-message {
+  color: #388e3c;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+.execution-steps {
+  background: white;
+  padding: 15px;
+  border-radius: 4px;
+  margin-top: 15px;
+}
+
+.execution-steps h4 {
+  margin: 0 0 15px 0;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #666;
+}
+
+.execution-step {
+  display: flex;
+  gap: 15px;
+  padding: 15px;
+  border-left: 3px solid #4CAF50;
+  background: #f9f9f9;
+  margin-bottom: 10px;
+  border-radius: 4px;
+}
+
+.step-number {
+  background: #4CAF50;
+  color: white;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.step-details {
+  flex: 1;
+}
+
+.step-label {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.step-info {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.step-status {
+  font-size: 12px;
+  color: #4CAF50;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.retry-btn {
+  background: #2196F3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 15px;
+}
+
+.retry-btn:hover {
+  background: #1976D2;
+}

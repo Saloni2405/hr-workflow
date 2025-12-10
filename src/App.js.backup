@@ -1,0 +1,370 @@
+import React, { useState, useCallback, useRef } from 'react';
+import ReactFlow, {
+  Controls,
+  Background,
+  addEdge,
+  useReactFlow,
+  ReactFlowProvider,
+} from 'reactflow';
+import 'reactflow/dist/style.css';
+
+import { StartNode, TaskNode, ApprovalNode, AutomatedNode, EndNode } from './components/nodes/NodeCard';
+import NodeEditPanel from './components/NodeEditPanel';
+import WorkflowSimulator from './components/WorkflowSimulator';
+import RightPanel from './components/RightPanel';
+import { useCanvasState } from './hooks/useCanvasState';
+import sampleCanvas from './sample-canvas.json';
+import './App.css';
+
+// Define custom node types
+const nodeTypes = {
+  startNode: StartNode,
+  taskNode: TaskNode,
+  approvalNode: ApprovalNode,
+  automatedNode: AutomatedNode,
+  endNode: EndNode,
+};
+
+// Custom edge style with smooth curves and arrows
+const defaultEdgeOptions = {
+  type: 'smoothstep',
+  animated: false,
+  style: { stroke: '#9E9E9E', strokeWidth: 2 },
+  markerEnd: {
+    type: 'arrowclosed',
+    color: '#9E9E9E',
+  },
+};
+
+// Node templates for the sidebar
+const nodeTemplates = [
+  { type: 'startNode', label: 'Start', icon: '🚀', color: '#2196F3' },
+  { type: 'taskNode', label: 'Task', icon: '📝', color: '#FF9800' },
+  { type: 'approvalNode', label: 'Approval', icon: '✅', color: '#4CAF50' },
+  { type: 'automatedNode', label: 'Automated', icon: '⚡', color: '#9C27B0' },
+  { type: 'endNode', label: 'End', icon: '🏁', color: '#F44336' },
+];
+
+let nodeId = 100;
+const getNodeId = () => `node_${nodeId++}`;
+
+function AppContent() {
+  const reactFlowInstance = useReactFlow();
+  const reactFlowWrapper = useRef(null);
+  
+  // Load initial state from sample-canvas.json or start empty
+  const [isLoaded, setIsLoaded] = useState(false);
+  const { 
+    nodes, 
+    edges, 
+    setNodes, 
+    setEdges, 
+    onNodesChange, 
+    onEdgesChange,
+    undo,
+    redo,
+    canUndo,
+    canRedo,
+  } = useCanvasState(
+    isLoaded ? sampleCanvas.nodes : [],
+    isLoaded ? sampleCanvas.edges : []
+  );
+  
+  const [selectedNode, setSelectedNode] = useState(null);
+  const [showEditPanel, setShowEditPanel] = useState(false);
+
+  // Load sample workflow on mount
+  React.useEffect(() => {
+    if (!isLoaded && sampleCanvas) {
+      setNodes(sampleCanvas.nodes);
+      setEdges(sampleCanvas.edges);
+      setIsLoaded(true);
+      setTimeout(() => {
+        reactFlowInstance.fitView({ padding: 0.2, duration: 800 });
+      }, 100);
+    }
+  }, [isLoaded, setNodes, setEdges, reactFlowInstance]);
+
+  // Handle edge connection
+  const onConnect = useCallback(
+    (params) => {
+      setEdges((eds) => addEdge({ ...params, ...defaultEdgeOptions }, eds));
+      console.log('🔗 Edge connected:', params);
+    },
+    [setEdges]
+  );
+
+  // Handle node selection
+  const onNodeClick = useCallback((event, node) => {
+    setSelectedNode(node);
+    setShowEditPanel(true);
+    console.log('🎯 Node selected:', node);
+  }, []);
+
+  // Handle canvas click (deselect)
+  const onPaneClick = useCallback(() => {
+    setSelectedNode(null);
+    setShowEditPanel(false);
+  }, []);
+
+  // Add new node from sidebar
+  const onDragStart = (event, nodeType) => {
+    event.dataTransfer.setData('application/reactflow', nodeType);
+    event.dataTransfer.effectAllowed = 'move';
+  };
+
+  const onDrop = useCallback(
+    (event) => {
+      event.preventDefault();
+
+      const type = event.dataTransfer.getData('application/reactflow');
+      if (!type) return;
+
+      const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
+      const position = reactFlowInstance.project({
+        x: event.clientX - reactFlowBounds.left,
+        y: event.clientY - reactFlowBounds.top,
+      });
+
+      const newNode = {
+        id: getNodeId(),
+        type,
+        position,
+        data: { 
+          label: `New ${type.replace('Node', '')}`,
+          title: '',
+        },
+      };
+
+      setNodes((nds) => nds.concat(newNode));
+      console.log('➕ Node added:', newNode);
+    },
+    [reactFlowInstance, setNodes]
+  );
+
+  const onDragOver = useCallback((event) => {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = 'move';
+  }, []);
+
+  // Update node data
+  const updateNodeData = useCallback(
+    (nodeId, newData) => {
+      setNodes((nds) =>
+        nds.map((node) => {
+          if (node.id === nodeId) {
+            return {
+              ...node,
+              data: newData,
+            };
+          }
+          return node;
+        })
+      );
+      // Update selected node
+      setSelectedNode((sel) => {
+        if (sel && sel.id === nodeId) {
+          return { ...sel, data: newData };
+        }
+        return sel;
+      });
+      console.log('💾 Node updated:', nodeId, newData);
+    },
+    [setNodes]
+  );
+
+  // Delete selected elements
+  const onNodesDelete = useCallback(() => {
+    if (selectedNode) {
+      setSelectedNode(null);
+      setShowEditPanel(false);
+    }
+  }, [selectedNode]);
+
+  // Center on specific node
+  const handleCenterNode = useCallback((node) => {
+    if (node && node.position) {
+      reactFlowInstance.setCenter(
+        node.position.x + 100, 
+        node.position.y + 50, 
+        { zoom: 1.2, duration: 800 }
+      );
+      setSelectedNode(node);
+      setShowEditPanel(true);
+      console.log('🎯 Centered on node:', node.id);
+    }
+  }, [reactFlowInstance]);
+
+  // Fit view
+  const handleFitView = useCallback(() => {
+    reactFlowInstance.fitView({ padding: 0.2, duration: 800 });
+    console.log('🔍 Fit view');
+  }, [reactFlowInstance]);
+
+  // Zoom controls
+  const handleZoomIn = useCallback(() => {
+    reactFlowInstance.zoomIn({ duration: 300 });
+  }, [reactFlowInstance]);
+
+  const handleZoomOut = useCallback(() => {
+    reactFlowInstance.zoomOut({ duration: 300 });
+  }, [reactFlowInstance]);
+    setSelectedNode(node);
+  }, []);
+
+  // Handle canvas click (deselect)
+  const onPaneClick = useCallback(() => {
+    setSelectedNode(null);
+  }, []);
+
+  // Add new node from sidebar
+  const onDragStart = (event, nodeType) => {
+    event.dataTransfer.setData('application/reactflow', nodeType);
+    event.dataTransfer.effectAllowed = 'move';
+  };
+
+  const onDrop = useCallback(
+    (event) => {
+      event.preventDefault();
+
+      const type = event.dataTransfer.getData('application/reactflow');
+      const reactFlowBounds = event.target.getBoundingClientRect();
+      const position = {
+        x: event.clientX - reactFlowBounds.left - 100,
+        y: event.clientY - reactFlowBounds.top - 50,
+      };
+
+      const newNode = {
+        id: getNodeId(),
+        type,
+        position,
+        data: { 
+          label: `New ${type.replace('Node', '')}`,
+          title: '',
+        },
+      };
+
+      setNodes((nds) => nds.concat(newNode));
+    },
+    [setNodes]
+  );
+
+  const onDragOver = useCallback((event) => {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = 'move';
+  }, []);
+
+  // Update node data
+  const updateNodeData = useCallback(
+    (nodeId, newData) => {
+      setNodes((nds) =>
+        nds.map((node) => {
+          if (node.id === nodeId) {
+            return {
+              ...node,
+              data: newData,
+            };
+          }
+          return node;
+        })
+      );
+      // Update selected node
+      setSelectedNode((sel) => {
+        if (sel && sel.id === nodeId) {
+          return { ...sel, data: newData };
+        }
+        return sel;
+      });
+    },
+    [setNodes]
+  );
+
+  // Delete selected elements
+  const onNodesDelete = useCallback(() => {
+    if (selectedNode) {
+      setSelectedNode(null);
+    }
+  }, [selectedNode]);
+
+  return (
+    <div className="app-container">
+      {/* Header */}
+      <header className="app-header">
+        <div className="header-content">
+          <h1>HR Workflow Designer</h1>
+          <p>Design and test your HR workflows visually</p>
+        </div>
+        <WorkflowSimulator nodes={nodes} edges={edges} />
+      </header>
+
+      <div className="main-content">
+        {/* Sidebar with node templates */}
+        <aside className="sidebar">
+          <h3>Node Types</h3>
+          <p className="sidebar-hint">Drag nodes to the canvas</p>
+          <div className="node-templates">
+            {nodeTemplates.map((template) => (
+              <div
+                key={template.type}
+                className="node-template"
+                draggable
+                onDragStart={(e) => onDragStart(e, template.type)}
+                style={{ borderLeftColor: template.color }}
+              >
+                <span className="template-icon">{template.icon}</span>
+                <span className="template-label">{template.label}</span>
+              </div>
+            ))}
+          </div>
+
+          <div className="sidebar-info">
+            <h4>Instructions</h4>
+            <ul>
+              <li>Drag nodes onto the canvas</li>
+              <li>Click a node to edit it</li>
+              <li>Connect nodes by dragging from one handle to another</li>
+              <li>Press Delete to remove selected items</li>
+              <li>Use Test Workflow to simulate execution</li>
+            </ul>
+          </div>
+        </aside>
+
+        {/* React Flow Canvas */}
+        <div className="canvas-container">
+          <ReactFlow
+            nodes={nodes}
+            edges={edges}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            onConnect={onConnect}
+            onNodeClick={onNodeClick}
+            onPaneClick={onPaneClick}
+            onDrop={onDrop}
+            onDragOver={onDragOver}
+            onNodesDelete={onNodesDelete}
+            nodeTypes={nodeTypes}
+            fitView
+          >
+            <Background />
+            <Controls />
+            <MiniMap 
+              nodeColor={(node) => {
+                const template = nodeTemplates.find(t => t.type === node.type);
+                return template ? template.color : '#999';
+              }}
+            />
+          </ReactFlow>
+        </div>
+
+        {/* Node Edit Panel */}
+        <NodeEditPanel
+          selectedNode={selectedNode}
+          onUpdateNode={updateNodeData}
+          onClose={() => setSelectedNode(null)}
+        />
+      </div>
+    </div>
+  );
+}
+
+export default App;

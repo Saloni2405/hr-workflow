@@ -1,0 +1,109 @@
+/* Node Styles */
+.custom-node {
+  background: white;
+  border-radius: 8px;
+  border: 2px solid #ddd;
+  min-width: 180px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s;
+}
+
+.custom-node.selected {
+  border-color: #4CAF50;
+  box-shadow: 0 4px 16px rgba(76, 175, 80, 0.3);
+}
+
+.node-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-bottom: 1px solid #eee;
+  background: #f9f9f9;
+  border-radius: 6px 6px 0 0;
+}
+
+.node-icon {
+  font-size: 18px;
+}
+
+.node-type {
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.node-content {
+  padding: 12px;
+}
+
+.node-title {
+  font-weight: 500;
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+.node-detail {
+  font-size: 12px;
+  color: #666;
+  margin-top: 4px;
+}
+
+/* Specific node type colors */
+.start-node {
+  border-color: #2196F3;
+}
+
+.start-node .node-header {
+  background: #E3F2FD;
+}
+
+.task-node {
+  border-color: #FF9800;
+}
+
+.task-node .node-header {
+  background: #FFF3E0;
+}
+
+.approval-node {
+  border-color: #4CAF50;
+}
+
+.approval-node .node-header {
+  background: #E8F5E9;
+}
+
+.automated-node {
+  border-color: #9C27B0;
+}
+
+.automated-node .node-header {
+  background: #F3E5F5;
+}
+
+.end-node {
+  border-color: #F44336;
+}
+
+.end-node .node-header {
+  background: #FFEBEE;
+}
+
+/* React Flow Handle styles */
+.react-flow__handle {
+  width: 10px;
+  height: 10px;
+  background: #555;
+  border: 2px solid white;
+}
+
+.react-flow__handle-top {
+  top: -5px;
+}
+
+.react-flow__handle-bottom {
+  bottom: -5px;
+}

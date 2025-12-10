@@ -1,0 +1,177 @@
+{
+  "nodes": [
+    {
+      "id": "start-1",
+      "type": "startNode",
+      "position": { "x": 250, "y": 50 },
+      "data": {
+        "title": "Employee Onboarding",
+        "label": "Employee Onboarding",
+        "metadata": [
+          { "key": "department", "value": "Engineering" },
+          { "key": "startDate", "value": "2025-01-15" }
+        ]
+      }
+    },
+    {
+      "id": "task-1",
+      "type": "taskNode",
+      "position": { "x": 100, "y": 180 },
+      "data": {
+        "title": "Complete Personal Information",
+        "label": "Complete Personal Information",
+        "description": "Fill out emergency contacts and tax forms",
+        "assignee": "New Employee",
+        "dueDate": "2025-01-16",
+        "customFields": []
+      }
+    },
+    {
+      "id": "task-2",
+      "type": "taskNode",
+      "position": { "x": 400, "y": 180 },
+      "data": {
+        "title": "Setup IT Equipment",
+        "label": "Setup IT Equipment",
+        "description": "Assign laptop, credentials, and access cards",
+        "assignee": "IT Department",
+        "dueDate": "2025-01-16",
+        "customFields": [
+          { "key": "equipment", "value": "MacBook Pro" }
+        ]
+      }
+    },
+    {
+      "id": "approval-1",
+      "type": "approvalNode",
+      "position": { "x": 250, "y": 320 },
+      "data": {
+        "title": "Manager Approval",
+        "label": "Manager Approval",
+        "approverRole": "Manager",
+        "autoApproveThreshold": ""
+      }
+    },
+    {
+      "id": "automated-1",
+      "type": "automatedNode",
+      "position": { "x": 100, "y": 460 },
+      "data": {
+        "title": "Send Welcome Email",
+        "label": "Send Welcome Email",
+        "action": "send_email",
+        "actionLabel": "Send Email",
+        "actionParams": {
+          "to": "new.employee@company.com",
+          "subject": "Welcome to the Team!",
+          "body": "Welcome message template"
+        }
+      }
+    },
+    {
+      "id": "automated-2",
+      "type": "automatedNode",
+      "position": { "x": 400, "y": 460 },
+      "data": {
+        "title": "Generate Employee Badge",
+        "label": "Generate Employee Badge",
+        "action": "generate_doc",
+        "actionLabel": "Generate Document",
+        "actionParams": {
+          "template": "employee_badge",
+          "recipient": "Security Team"
+        }
+      }
+    },
+    {
+      "id": "task-3",
+      "type": "taskNode",
+      "position": { "x": 250, "y": 600 },
+      "data": {
+        "title": "Complete Training Modules",
+        "label": "Complete Training Modules",
+        "description": "Finish compliance and safety training",
+        "assignee": "New Employee",
+        "dueDate": "2025-01-20",
+        "customFields": [
+          { "key": "modules", "value": "5" }
+        ]
+      }
+    },
+    {
+      "id": "end-1",
+      "type": "endNode",
+      "position": { "x": 250, "y": 740 },
+      "data": {
+        "endMessage": "Onboarding Complete - Welcome Aboard!",
+        "label": "Onboarding Complete - Welcome Aboard!",
+        "showSummary": true
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e-start-task1",
+      "source": "start-1",
+      "target": "task-1",
+      "type": "smoothstep",
+      "animated": false
+    },
+    {
+      "id": "e-start-task2",
+      "source": "start-1",
+      "target": "task-2",
+      "type": "smoothstep",
+      "animated": false
+    },
+    {
+      "id": "e-task1-approval",
+      "source": "task-1",
+      "target": "approval-1",
+      "type": "smoothstep",
+      "animated": false
+    },
+    {
+      "id": "e-task2-approval",
+      "source": "task-2",
+      "target": "approval-1",
+      "type": "smoothstep",
+      "animated": false
+    },
+    {
+      "id": "e-approval-auto1",
+      "source": "approval-1",
+      "target": "automated-1",
+      "type": "smoothstep",
+      "animated": false
+    },
+    {
+      "id": "e-approval-auto2",
+      "source": "approval-1",
+      "target": "automated-2",
+      "type": "smoothstep",
+      "animated": false
+    },
+    {
+      "id": "e-auto1-task3",
+      "source": "automated-1",
+      "target": "task-3",
+      "type": "smoothstep",
+      "animated": false
+    },
+    {
+      "id": "e-auto2-task3",
+      "source": "automated-2",
+      "target": "task-3",
+      "type": "smoothstep",
+      "animated": false
+    },
+    {
+      "id": "e-task3-end",
+      "source": "task-3",
+      "target": "end-1",
+      "type": "smoothstep",
+      "animated": false
+    }
+  ]
+}
